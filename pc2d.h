@@ -2,6 +2,7 @@
 #include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
                double *blen, double *posmin);

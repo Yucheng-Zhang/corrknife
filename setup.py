@@ -11,12 +11,12 @@ ext_modules = [Extension(
     include_dirs=[numpy.get_include()],  # .../site-packages/numpy/core/include
     language="c",
     # libraries=
-    extra_compile_args=['-O3'],
-    # extra_link_args = "...".)
+    extra_compile_args=["-O3", "-fopenmp"],
+    # extra_link_args=["-fopenmp"]
 )]
 
 ext_modules = cythonize(ext_modules, compiler_directives={
-                        'language_level': "3"})
+    'language_level': "3"})
 
 setup(
     name='pc2d',

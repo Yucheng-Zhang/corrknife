@@ -13,6 +13,11 @@ For this final project, we will do the estimation of correlation function of gal
 - Parallelize the code with `OpenMP` and `MPI` in `C`.
 - Wrap the parallelized `C` with `Python`, which works better in loading data and plotting results.
 
+## Notes
+
+- To compile: `CC=gcc python setup.py build_ext --inplace`
+- Maybe it's better not to use python wrapper.
+
 ## Acknowledgement
 
 - This project is based on Shadab Alam's Correlation Function code https://gitlab.com/shadaba/CorrelationFunction.

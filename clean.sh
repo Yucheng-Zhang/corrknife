@@ -1,3 +1,5 @@
 #!/bin/bash
 
-rm -rf build/ calc.c pc2d*.so
+rm -rf build/
+rm -f calc.c
+rm -f pc2d*.so
