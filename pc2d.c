@@ -4,11 +4,11 @@ Pair count in 2D, (s,mu).
 #include "pc2d.h"
 
 /* Main function. */
-void pc2d(double *res, double *p1, long np1, double *p2, long np2, double *blen,
+void pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
           double *posmin, double *rlim, int nbins0, int nbins1, int ncells,
           int njk) {
   /* Parameters:
-      res: result to be returned;
+      xc: pair count to be returned;
       p1: first set of particles;
       np1: size of first dataset;
       p2: second set of particles;
@@ -93,16 +93,16 @@ void pc2d(double *res, double *p1, long np1, double *p2, long np2, double *blen,
                   b2 >= 0) {
                 if (njk == 0) { // no jackknife
                   idx = b1 * nbins[1] + b2;
-                  res[idx] += weight12;
+                  xc[idx] += weight12;
                 } else { // jackknife
                   int idx = b1 * nbins[1] * (njk + 1) + b2 * (njk + 1);
-                  res[idx + njk] += weight12;
+                  xc[idx + njk] += weight12;
                   // jackknife region of particle 1
-                  res[idx + jk1] += weight12;
+                  xc[idx + jk1] += weight12;
                   // jackknife region of particle 2
                   int jk2 = p2[i1 * nattr + 4];
                   if (jk1 != jk2)
-                    res[idx + jk2] += weight12;
+                    xc[idx + jk2] += weight12;
                 }
               }
               if (ll[j] != -1)
