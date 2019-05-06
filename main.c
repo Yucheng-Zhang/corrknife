@@ -33,11 +33,15 @@ int main(int argc, char *argv[]) {
   sscanf(argv[17], "%lf", &rlim[1]);
 
   /* load data */
-  double *p1, *p2;
+  double *p1 = (double *)malloc(np1 * ncol * sizeof(double));
+  double *p2 = (double *)malloc(np2 * ncol * sizeof(double));
   printf(">> Loading file: %s\n", fdata);
   read_data(fdata, np1, p1, ncol);
   printf(">> Loading file: %s\n", frand);
   read_data(frand, np2, p2, ncol);
+  printf("p1[0] = %lf\n", p1[0]);
+  printf("p2[0] = %lf\n", p2[0]);
+  return 0;
 
   /* prepare parameters */
   double blen[3], posmin[3];

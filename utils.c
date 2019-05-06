@@ -2,8 +2,6 @@
 
 /* Read data from file. */
 void read_data(char fn[256], long np, double *p, int ncol) {
-  // malloc data
-  p = (double *)malloc(np * ncol * sizeof(double));
   // read in file
   FILE *fp = fopen(fn, "r");
   for (long i = 0; i < np; i++) {
