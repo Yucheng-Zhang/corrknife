@@ -39,9 +39,6 @@ int main(int argc, char *argv[]) {
   read_data(fdata, np1, p1, ncol);
   printf(">> Loading file: %s\n", frand);
   read_data(frand, np2, p2, ncol);
-  printf("p1[0] = %lf\n", p1[0]);
-  printf("p2[0] = %lf\n", p2[0]);
-  return 0;
 
   /* prepare parameters */
   double blen[3], posmin[3];
