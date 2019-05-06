@@ -17,7 +17,7 @@ void write_pc(char fn[256], int nbins0, int nbins1, int njk, double *xc) {
   FILE *fp = fopen(fn, "w");
   for (int i = 0; i < nbins0 * nbins1; i++) {
     for (int j = 0; j < njk; j++) {
-      fprintf(fp, " %e", xc[i * njk + j]);
+      fprintf(fp, " %.8e", xc[i * njk + j]);
     }
     fprintf(fp, "\n");
   }

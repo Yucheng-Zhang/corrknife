@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
   int njk;            // number of jackknives
   int ncells;         // number of cells
   double brange[6];   // range of x,y,z
-  double rlim[2];
+  double rlim[4];
 
   sscanf(argv[1], "%s", fdata);
   sscanf(argv[2], "%ld", &np1);
@@ -31,6 +31,9 @@ int main(int argc, char *argv[]) {
   sscanf(argv[15], "%lf", &brange[5]);
   sscanf(argv[16], "%lf", &rlim[0]);
   sscanf(argv[17], "%lf", &rlim[1]);
+
+  rlim[2] = 0;
+  rlim[3] = 1;
 
   /* load data */
   double *p1 = (double *)malloc(np1 * ncol * sizeof(double));

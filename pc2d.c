@@ -58,8 +58,9 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
 
     // cell it belongs
     int ic[3];
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) {
       ic[i] = floor((pp1[i] - pp0[i]) / bl[i] * ncells);
+    }
 
     // cell range
     int cmm[6];
