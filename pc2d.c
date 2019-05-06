@@ -40,8 +40,10 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
   long *hoc = (long *)malloc(ncells * ncells * ncells * sizeof(long));
   init_mesh(ll, hoc, p2, np2, nattr, ncells, blen, posmin);
 
+  printf(">> Looping over p1\n");
   // loop over particles in p1
-  double pp0[3], bl[3]; // cache
+  double pp0[3],
+      bl[3]; // cache
   for (int i = 0; i < 3; i++) {
     pp0[i] = posmin[i];
     bl[i] = blen[i];
@@ -123,8 +125,8 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
 }
 
 /* Mesh the particles into cells. */
-int init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
-              double *blen, double *posmin) {
+void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
+               double *blen, double *posmin) {
   /* Parameters:
       ll: linked list of particles in the same cell, returned;
       hoc: head of cell (linked list ll), returned;
@@ -145,7 +147,7 @@ int init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
   for (long ii = 0; ii < np; ii++) {
     // the cell that the particle belongs
     for (int i = 0; i < 3; i++) {
-      ic[i] = floor((p[ii * nattr] - pp0[i]) / bl[i] * ncells);
+      ic[i] = floor((p[ii * nattr + i] - pp0[i]) / bl[i] * ncells);
       // boundary
       ic[i] = (ic[i] == ncells) ? ic[i] - 1 : ic[i];
     }
@@ -154,8 +156,6 @@ int init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
     ll[ii] = hoc[idx];
     hoc[idx] = ii;
   }
-
-  return 0;
 }
 
 /* Find the bin that the pair belongs. */

@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-int init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
-              double *blen, double *posmin);
+void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
+               double *blen, double *posmin);
 
 int find_bin(double *pp1, double *pp2, double *rlim, int *nbins, int *b1,
              int *b2);
