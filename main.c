@@ -41,9 +41,11 @@ int main(int argc, char *argv[]) {
 
   /* prepare parameters */
   double blen[3], posmin[3];
+  printf(">> Box corner with length:\n");
   for (int i = 0; i < 3; i++) {
     blen[i] = brange[i + 3] - brange[i];
     posmin[i] = brange[i];
+    printf(":: %lf, %lf\n", posmin[i], blen[i]);
   }
 
   /* run */

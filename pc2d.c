@@ -4,9 +4,9 @@ Pair count in 2D, (s,mu).
 #include "pc2d.h"
 
 /* Main function. */
-void pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
-          double *posmin, double *rlim, int nbins0, int nbins1, int ncells,
-          int njk) {
+int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
+         double *posmin, double *rlim, int nbins0, int nbins1, int ncells,
+         int njk) {
   /* Parameters:
       xc: pair count to be returned;
       p1: first set of particles;
@@ -20,7 +20,7 @@ void pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
       ncells: number of cells in each dim;
       njk: number of jackknives, 0: no jackknife;
   */
-  printf(">> Pair counting......");
+  printf(">> Pair counting......\n");
 
   double maxrad = rlim[1];
   // get the number of cells in max radius
@@ -118,17 +118,19 @@ void pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
   }
   free(ll);
   free(hoc);
+
+  return 0;
 }
 
 /* Mesh the particles into cells. */
-void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
-               double *blen, double *posmin) {
+int init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
+              double *blen, double *posmin) {
   /* Parameters:
       ll: linked list of particles in the same cell, returned;
       hoc: head of cell (linked list ll), returned;
   */
 
-  printf(">> Initing mesh");
+  printf(">> Initing mesh\n");
   // initialize hoc to be -1, which denotes the end of cell list
   long ncells_tot = ncells * ncells * ncells;
   memset(hoc, -1, ncells_tot * sizeof(long));
@@ -139,6 +141,7 @@ void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
     pp0[i] = posmin[i];
     bl[i] = blen[i];
   }
+
   for (long ii = 0; ii < np; ii++) {
     // the cell that the particle belongs
     for (int i = 0; i < 3; i++) {
@@ -151,6 +154,8 @@ void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
     ll[ii] = hoc[idx];
     hoc[idx] = ii;
   }
+
+  return 0;
 }
 
 /* Find the bin that the pair belongs. */
