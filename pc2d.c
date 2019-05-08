@@ -41,7 +41,8 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
   long *hoc = (long *)malloc(ncells * ncells * ncells * sizeof(long));
   init_mesh(ll, hoc, p2, np2, nattr, ncells, blen, posmin);
 
-  printf(">> Looping over p1\n");
+  printf(">> Looping over p1...");
+  clock_t tt = tic();
   // loop over particles in p1
   double pp0[3],
       bl[3]; // cache
@@ -120,6 +121,9 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
       }
     }
   }
+  double tt = toc(tt);
+  printf(" %.2lf s\n", tt);
+
   free(ll);
   free(hoc);
 
@@ -134,7 +138,8 @@ void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
       hoc: head of cell (linked list ll), returned;
   */
 
-  printf(">> Initing mesh\n");
+  printf(">> Initing mesh...");
+  clock_t tt = tic();
   // initialize hoc to be -1, which denotes the end of cell list
   long ncells_tot = ncells * ncells * ncells;
   memset(hoc, -1, ncells_tot * sizeof(long));
@@ -158,6 +163,9 @@ void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
     ll[ii] = hoc[idx];
     hoc[idx] = ii;
   }
+
+  double tt = toc(tt);
+  printf(" %.2lf s\n", tt);
 }
 
 /* Find the bin that the pair belongs. */
