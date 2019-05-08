@@ -33,6 +33,6 @@ clock_t tic() {
 }
 
 double toc(clock_t tt) {
-  clock_t tt1;
+  clock_t tt1 = clock();
   return (tt1 - tt) / CLOCKS_PER_SEC;
 }
