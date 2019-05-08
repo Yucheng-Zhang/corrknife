@@ -121,8 +121,8 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
       }
     }
   }
-  double tt = toc(tt);
-  printf(" %.2lf s\n", tt);
+  double tt1 = toc(tt);
+  printf(" %.2lf s\n", tt1);
 
   free(ll);
   free(hoc);
@@ -164,8 +164,8 @@ void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
     hoc[idx] = ii;
   }
 
-  double tt = toc(tt);
-  printf(" %.2lf s\n", tt);
+  double tt1 = toc(tt);
+  printf(" %.2lf s\n", tt1);
 }
 
 /* Find the bin that the pair belongs. */
