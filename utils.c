@@ -16,8 +16,8 @@ void read_data(char fn[256], long np, double *p, int ncol) {
 void write_pc(char fn[256], int nbins0, int nbins1, int njk, double *xc) {
   FILE *fp = fopen(fn, "w");
   for (int i = 0; i < nbins0 * nbins1; i++) {
-    for (int j = 0; j < njk; j++) {
-      fprintf(fp, " %.8e", xc[i * njk + j]);
+    for (int j = 0; j <= njk; j++) {
+      fprintf(fp, " %.8e", xc[i * (njk + 1) + j]);
     }
     fprintf(fp, "\n");
   }
