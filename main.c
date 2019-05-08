@@ -31,9 +31,8 @@ int main(int argc, char *argv[]) {
   sscanf(argv[15], "%lf", &brange[5]);
   sscanf(argv[16], "%lf", &rlim[0]);
   sscanf(argv[17], "%lf", &rlim[1]);
-
-  rlim[2] = 0;
-  rlim[3] = 1;
+  sscanf(argv[18], "%lf", &rlim[2]);
+  sscanf(argv[19], "%lf", &rlim[3]);
 
   /* load data */
   double *p1 = (double *)malloc(np1 * ncol * sizeof(double));

@@ -25,8 +25,9 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
   double maxrad = rlim[1];
   // get the number of cells in max radius
   int ncb[3];
-  for (int i = 0; i < 3; i++)
+  for (int i = 0; i < 3; i++) {
     ncb[i] = ceil((maxrad / blen[i]) * (double)(ncells)) + 1;
+  }
 
   int nbins[2];
   nbins[0] = nbins0;
@@ -85,7 +86,7 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
               // particle two coordinates
               double pp2[3];
               for (int i = 0; i < 3; i++)
-                pp2[i] = p2[i1 * nattr + i];
+                pp2[i] = p2[j * nattr + i];
               double weight12 = wp1 * p2[j * nattr + 3];
 
               // find the bin
@@ -104,7 +105,7 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
                   // jackknife region of particle 1
                   xc[idx + jk1] += weight12;
                   // jackknife region of particle 2
-                  int jk2 = p2[i1 * nattr + 4];
+                  int jk2 = p2[j * nattr + 4];
                   if (jk1 != jk2)
                     xc[idx + jk2] += weight12;
                 }
@@ -193,5 +194,5 @@ int find_bin(double *pp1, double *pp2, double *rlim, int *nbins, int *b1,
     *b2 = -1;
     return -1;
   }
-  return -1;
+  //  return -1;
 }

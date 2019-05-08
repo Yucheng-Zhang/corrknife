@@ -15,9 +15,6 @@ For this final project, we will do the estimation of correlation function of gal
 
 ## Notes
 
-- To compile: `CC=gcc python setup.py build_ext --inplace`
-- Maybe it's better not to use python wrapper.
-
 ## Acknowledgement
 
 - This project is based on Shadab Alam's Correlation Function code https://gitlab.com/shadaba/CorrelationFunction.
