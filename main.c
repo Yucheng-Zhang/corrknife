@@ -1,6 +1,7 @@
 #include "pc2d.h"
 #include "ref/corr2dc.h"
 #include "utils.h"
+#include <mpi.h>
 
 /* Main function. */
 int main(int argc, char *argv[]) {
@@ -52,22 +53,51 @@ int main(int argc, char *argv[]) {
     printf(":: %lf, %lf\n", posmin[i], blen[i]);
   }
 
+  /* init MPI */
+  int mpirank, mpisize;
+  MPI_Init(&argc, &argv);
+  MPI_Comm_rank(MPI_COMM_WORLD, &mpirank);
+  MPI_Comm_size(MPI_COMM_WORLD, &mpisize);
+
+  /* get start and end index of p1 */
+  long spi = mpirank * (np1 / mpisize);
+  long epi = (mpirank + 1) * (np1 / mpisize); // not included
+  if (mpirank == mpisize - 1)
+    epi = np1;
+
   /* run */
-  double *xc = (double *)calloc(nbins0 * nbins1 * (njk + 1), sizeof(double));
-  pc2d(xc, p1, np1, p2, np2, blen, posmin, rlim, nbins0, nbins1, ncells, njk);
+  long size_xc = nbins0 * nbins1 * (njk + 1);
+  double *xc = (double *)calloc(size_xc, sizeof(double));
+  pc2d(xc, p1, np1, p2, np2, blen, posmin, rlim, nbins0, nbins1, ncells, njk,
+       spi, epi);
+  MPI_Barrier(MPI_COMM_WORLD);
+
+  /* gather results */
+  double *xc_g;
+  if (mpirank == 0)
+    xc_g = (double *)calloc(size_xc, sizeof(double));
+  MPI_Allreduce(&xc, &xc_g, size_xc, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
   /* write pair count to file */
-  write_pc("out_xc.dat", nbins0, nbins1, njk, xc);
+  if (mpirank == 0)
+    write_pc("out_xc.dat", nbins0, nbins1, njk, xc_g);
 
   /* reference */
-  printf(">> Computing reference results...\n");
-  double *xc_r = (double *)calloc(nbins0 * nbins1 * (njk + 1), sizeof(double));
-  clock_t tt = tic();
-  corr2d(xc_r, p1, 0, np1, p2, 0, np2, rlim, nbins0, nbins1, ncells, blen,
-         posmin, 0, njk, 0, 0, 0);
-  double tt1 = toc(tt);
-  printf(":: Time: %.6lf s\n", tt1);
-  write_pc("out_xc_ref.dat", nbins0, nbins1, njk, xc_r);
+  if (mpirank == 0) {
+    printf(">> Computing reference results...\n");
+    double *xc_r =
+        (double *)calloc(nbins0 * nbins1 * (njk + 1), sizeof(double));
+    clock_t tt = tic();
+    corr2d(xc_r, p1, 0, np1, p2, 0, np2, rlim, nbins0, nbins1, ncells, blen,
+           posmin, 0, njk, 0, 0, 0);
+    double tt1 = toc(tt);
+    printf(":: Time: %.6lf s\n", tt1);
+    write_pc("out_xc_ref.dat", nbins0, nbins1, njk, xc_r);
+  }
 
+  /* free memory */
+  free(xc);
+  free(p1);
+  free(p2);
   return 0;
 }

@@ -13,7 +13,7 @@ static int find_bin(double *pp1, double *pp2, double *rlim, int *nbins, int *b1,
 /* Main function. */
 int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
          double *posmin, double *rlim, int nbins0, int nbins1, int ncells,
-         int njk) {
+         int njk, long spi, long epi) {
   /* Parameters:
       xc: pair count to be returned;
       p1: first set of particles;
@@ -49,7 +49,6 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
   init_mesh(ll, hoc, p2, np2, nattr, ncells, blen, posmin);
 
   printf(">> Looping over p1...\n");
-  clock_t tt = tic();
   // loop over particles in p1
   double pp0[3],
       bl[3]; // cache
@@ -57,7 +56,7 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
     pp0[i] = posmin[i];
     bl[i] = blen[i];
   }
-  for (long i1 = 0; i1 < np1; i1++) {
+  for (long i1 = spi; i1 < epi; i1++) {
     // particle one coordinates & weight
     double pp1[3];
     for (int i = 0; i < 3; i++)
@@ -128,8 +127,6 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
       }
     }
   }
-  double tt1 = toc(tt);
-  printf(":: Time: %.6lf s\n", tt1);
 
   free(ll);
   free(hoc);
@@ -146,7 +143,6 @@ void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
   */
 
   printf(">> Initing mesh...\n");
-  clock_t tt = tic();
   // initialize hoc to be -1, which denotes the end of cell list
   long ncells_tot = ncells * ncells * ncells;
   memset(hoc, -1, ncells_tot * sizeof(long));
@@ -170,9 +166,6 @@ void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
     ll[ii] = hoc[idx];
     hoc[idx] = ii;
   }
-
-  double tt1 = toc(tt);
-  printf(":: Time: %.6lf s\n", tt1);
 }
 
 /* Find the bin that the pair belongs. */
