@@ -3,12 +3,12 @@ Pair count in 2D, (s,mu).
 */
 #include "pc2d.h"
 
-/* Declaration of internal functions. */
-void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
-               double *blen, double *posmin);
+/* Declaration of local functions. */
+static void init_mesh(long *ll, long *hoc, double *p, long np, int nattr,
+                      int ncells, double *blen, double *posmin);
 
-int find_bin(double *pp1, double *pp2, double *rlim, int *nbins, int *b1,
-             int *b2);
+static int find_bin(double *pp1, double *pp2, double *rlim, int *nbins, int *b1,
+                    int *b2);
 
 /* Main function. */
 int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,

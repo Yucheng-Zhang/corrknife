@@ -1,13 +1,13 @@
 #include "corr2dc.h"
 
-int cwrap(int x, int y);
-int relwrap(double *dxyz, double *blen);
-double maxradius(double *rlim, int samp);
-void init_mesh(long *ll, long *hoc, double *p, long fp, long np, int nattr,
-               int nho, double *blen, double *posmin);
-int find_bin(double *axyz, double *bxyz, int samp, int *nsamp,
-             double *sampbound, int los, int pbc, double *blen, int *rx,
-             int *ry);
+static int cwrap(int x, int y);
+static int relwrap(double *dxyz, double *blen);
+static double maxradius(double *rlim, int samp);
+static void init_mesh(long *ll, long *hoc, double *p, long fp, long np,
+                      int nattr, int nho, double *blen, double *posmin);
+static int find_bin(double *axyz, double *bxyz, int samp, int *nsamp,
+                    double *sampbound, int los, int pbc, double *blen, int *rx,
+                    int *ry);
 
 int cwrap(int x, int y) {
 
