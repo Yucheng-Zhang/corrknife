@@ -99,5 +99,7 @@ int main(int argc, char *argv[]) {
   free(xc);
   free(p1);
   free(p2);
+
+  MPI_Finalize();
   return 0;
 }
