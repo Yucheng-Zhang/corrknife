@@ -39,18 +39,18 @@ int main(int argc, char *argv[]) {
   /* load data */
   double *p1 = (double *)malloc(np1 * ncol * sizeof(double));
   double *p2 = (double *)malloc(np2 * ncol * sizeof(double));
-  printf(">> Loading file: %s\n", fdata);
+//  printf(">> Loading file: %s\n", fdata);
   read_data(fdata, np1, p1, ncol);
-  printf(">> Loading file: %s\n", frand);
+//  printf(">> Loading file: %s\n", frand);
   read_data(frand, np2, p2, ncol);
 
   /* prepare parameters */
   double blen[3], posmin[3];
-  printf(">> Box corner with length:\n");
+//  printf(">> Box corner with length:\n");
   for (int i = 0; i < 3; i++) {
     blen[i] = brange[i + 3] - brange[i];
     posmin[i] = brange[i];
-    printf(":: %lf, %lf\n", posmin[i], blen[i]);
+//    printf(":: %lf, %lf\n", posmin[i], blen[i]);
   }
 
   /* init MPI */
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
   double *xc_g;
   if (mpirank == 0)
     xc_g = (double *)calloc(size_xc, sizeof(double));
-  MPI_Allreduce(&xc, &xc_g, size_xc, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+  MPI_Reduce(xc, xc_g, size_xc, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
   /* write pair count to file */
   if (mpirank == 0)
