@@ -27,7 +27,6 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
       ncells: number of cells in each dim;
       njk: number of jackknives, 0: no jackknife;
   */
-//  printf(">> Pair counting...\n");
 
   double maxrad = rlim[1];
   // get the number of cells in max radius
@@ -48,7 +47,6 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
   long *hoc = (long *)malloc(ncells * ncells * ncells * sizeof(long));
   init_mesh(ll, hoc, p2, np2, nattr, ncells, blen, posmin);
 
-//  printf(">> Looping over p1...\n");
   // loop over particles in p1
   double pp0[3],
       bl[3]; // cache
@@ -142,7 +140,6 @@ void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
       hoc: head of cell (linked list ll), returned;
   */
 
-//  printf(">> Initing mesh...\n");
   // initialize hoc to be -1, which denotes the end of cell list
   long ncells_tot = ncells * ncells * ncells;
   memset(hoc, -1, ncells_tot * sizeof(long));

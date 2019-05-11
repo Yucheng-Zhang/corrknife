@@ -36,28 +36,32 @@ int main(int argc, char *argv[]) {
   sscanf(argv[18], "%lf", &rlim[2]);
   sscanf(argv[19], "%lf", &rlim[3]);
 
-  /* load data */
-  double *p1 = (double *)malloc(np1 * ncol * sizeof(double));
-  double *p2 = (double *)malloc(np2 * ncol * sizeof(double));
-//  printf(">> Loading file: %s\n", fdata);
-  read_data(fdata, np1, p1, ncol);
-//  printf(">> Loading file: %s\n", frand);
-  read_data(frand, np2, p2, ncol);
-
-  /* prepare parameters */
-  double blen[3], posmin[3];
-//  printf(">> Box corner with length:\n");
-  for (int i = 0; i < 3; i++) {
-    blen[i] = brange[i + 3] - brange[i];
-    posmin[i] = brange[i];
-//    printf(":: %lf, %lf\n", posmin[i], blen[i]);
-  }
-
   /* init MPI */
   int mpirank, mpisize;
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &mpirank);
   MPI_Comm_size(MPI_COMM_WORLD, &mpisize);
+
+  /* load data */
+  double *p1 = (double *)malloc(np1 * ncol * sizeof(double));
+  double *p2 = (double *)malloc(np2 * ncol * sizeof(double));
+  read_data(fdata, np1, p1, ncol);
+  read_data(frand, np2, p2, ncol);
+  if (mpirank == 0) {
+    printf(">> Data file: %s\n", fdata);
+    printf(">> Rand file: %s\n", frand);
+  }
+
+  /* prepare parameters */
+  double blen[3], posmin[3];
+  if (mpirank == 0)
+    printf(">> Box corner with length:\n");
+  for (int i = 0; i < 3; i++) {
+    blen[i] = brange[i + 3] - brange[i];
+    posmin[i] = brange[i];
+    if (mpirank == 0)
+      printf(":: %lf, %lf\n", posmin[i], blen[i]);
+  }
 
   /* get start and end index of p1 */
   long spi = mpirank * (np1 / mpisize);
@@ -65,9 +69,14 @@ int main(int argc, char *argv[]) {
   if (mpirank == mpisize - 1)
     epi = np1;
 
+  /* for timing */
+  clock_t tt;
+  double tt1;
+
   /* run */
   long size_xc = nbins0 * nbins1 * (njk + 1);
   double *xc = (double *)calloc(size_xc, sizeof(double));
+  tt = tic();
   pc2d(xc, p1, np1, p2, np2, blen, posmin, rlim, nbins0, nbins1, ncells, njk,
        spi, epi);
   MPI_Barrier(MPI_COMM_WORLD);
@@ -79,8 +88,11 @@ int main(int argc, char *argv[]) {
   MPI_Reduce(xc, xc_g, size_xc, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
   /* write pair count to file */
-  if (mpirank == 0)
+  if (mpirank == 0) {
+    tt1 = toc(tt);
+    printf(":: Time: %.6lf s\n", tt1);
     write_pc("out_xc.dat", nbins0, nbins1, njk, xc_g);
+  }
 
   /* reference */
   if (mpirank == 0) {
