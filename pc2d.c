@@ -3,6 +3,13 @@ Pair count in 2D, (s,mu).
 */
 #include "pc2d.h"
 
+/* Declaration of internal functions. */
+void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
+               double *blen, double *posmin);
+
+int find_bin(double *pp1, double *pp2, double *rlim, int *nbins, int *b1,
+             int *b2);
+
 /* Main function. */
 int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
          double *posmin, double *rlim, int nbins0, int nbins1, int ncells,
@@ -20,7 +27,7 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
       ncells: number of cells in each dim;
       njk: number of jackknives, 0: no jackknife;
   */
-  printf(">> Pair counting......\n");
+  printf(">> Pair counting...\n");
 
   double maxrad = rlim[1];
   // get the number of cells in max radius
@@ -41,7 +48,7 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
   long *hoc = (long *)malloc(ncells * ncells * ncells * sizeof(long));
   init_mesh(ll, hoc, p2, np2, nattr, ncells, blen, posmin);
 
-  printf(">> Looping over p1...");
+  printf(">> Looping over p1...\n");
   clock_t tt = tic();
   // loop over particles in p1
   double pp0[3],
@@ -122,7 +129,7 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
     }
   }
   double tt1 = toc(tt);
-  printf(" %.2lf s\n", tt1);
+  printf(":: Time: %.6lf s\n", tt1);
 
   free(ll);
   free(hoc);
@@ -138,7 +145,7 @@ void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
       hoc: head of cell (linked list ll), returned;
   */
 
-  printf(">> Initing mesh...");
+  printf(">> Initing mesh...\n");
   clock_t tt = tic();
   // initialize hoc to be -1, which denotes the end of cell list
   long ncells_tot = ncells * ncells * ncells;
@@ -165,7 +172,7 @@ void init_mesh(long *ll, long *hoc, double *p, long np, int nattr, int ncells,
   }
 
   double tt1 = toc(tt);
-  printf(" %.2lf s\n", tt1);
+  printf(":: Time: %.6lf s\n", tt1);
 }
 
 /* Find the bin that the pair belongs. */

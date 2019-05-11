@@ -1,4 +1,5 @@
 #include "pc2d.h"
+#include "ref/corr2dc.h"
 #include "utils.h"
 
 /* Main function. */
@@ -57,6 +58,16 @@ int main(int argc, char *argv[]) {
 
   /* write pair count to file */
   write_pc("out_xc.dat", nbins0, nbins1, njk, xc);
+
+  /* reference */
+  printf(">> Computing reference results...\n");
+  double *xc_r = (double *)calloc(nbins0 * nbins1 * (njk + 1), sizeof(double));
+  clock_t tt = tic();
+  corr2d(xc_r, p1, 0, np1, p2, 0, np2, rlim, nbins0, nbins1, ncells, blen,
+         posmin, 0, njk, 0, 0, 0);
+  double tt1 = toc(tt);
+  printf(":: Time: %.6lf s\n", tt1);
+  write_pc("out_xc_ref.dat", nbins0, nbins1, njk, xc_r);
 
   return 0;
 }
