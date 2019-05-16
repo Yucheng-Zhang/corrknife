@@ -69,14 +69,11 @@ int main(int argc, char *argv[]) {
   if (mpirank == mpisize - 1)
     epi = np1;
 
-  /* for timing */
-  clock_t tt;
-  double tt1;
-
   /* run */
   long size_xc = nbins0 * nbins1 * (njk + 1);
   double *xc = (double *)calloc(size_xc, sizeof(double));
-  tt = tic();
+  MPI_Barrier(MPI_COMM_WORLD);
+  double tt = MPI_Wtime();
   pc2d(xc, p1, np1, p2, np2, blen, posmin, rlim, nbins0, nbins1, ncells, njk,
        spi, epi);
   MPI_Barrier(MPI_COMM_WORLD);
@@ -89,8 +86,8 @@ int main(int argc, char *argv[]) {
 
   /* write pair count to file */
   if (mpirank == 0) {
-    tt1 = toc(tt);
-    printf(":: Time: %.6lf s\n", tt1);
+    tt = MPI_Wtime() - tt;
+    printf(":: Time: %f s\n", tt);
     write_pc("out_xc.dat", nbins0, nbins1, njk, xc_g);
   }
 
@@ -99,11 +96,11 @@ int main(int argc, char *argv[]) {
     printf(">> Computing reference results...\n");
     double *xc_r =
         (double *)calloc(nbins0 * nbins1 * (njk + 1), sizeof(double));
-    clock_t tt = tic();
+    tt = MPI_Wtime();
     corr2d(xc_r, p1, 0, np1, p2, 0, np2, rlim, nbins0, nbins1, ncells, blen,
            posmin, 0, njk, 0, 0, 0);
-    double tt1 = toc(tt);
-    printf(":: Time: %.6lf s\n", tt1);
+    tt = MPI_Wtime() - tt;
+    printf(":: Time: %f s\n", tt);
     write_pc("out_xc_ref.dat", nbins0, nbins1, njk, xc_r);
   }
 
