@@ -2,8 +2,10 @@
 Pair count in 2D, (s,mu).
 */
 #include "pc2d.h"
+#include <omp.h>
 
 /* Declaration of local functions. */
+
 static void init_mesh(long *ll, long *hoc, double *p, long np, int nattr,
                       int ncells, double *blen, double *posmin);
 
@@ -54,6 +56,8 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
     pp0[i] = posmin[i];
     bl[i] = blen[i];
   }
+
+#pragma omp parallel for
   for (long i1 = spi; i1 < epi; i1++) {
     // particle one coordinates & weight
     double pp1[3];
@@ -103,15 +107,19 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
                   b2 >= 0) {
                 if (njk == 0) { // no jackknife
                   idx = b1 * nbins[1] + b2;
+#pragma omp atomic
                   xc[idx] += weight12;
                 } else { // jackknife
                   int idx = b1 * nbins[1] * (njk + 1) + b2 * (njk + 1);
+#pragma omp atomic
                   xc[idx + njk] += weight12;
                   // jackknife region of particle 1
+#pragma omp atomic
                   xc[idx + jk1] += weight12;
                   // jackknife region of particle 2
                   int jk2 = p2[j * nattr + 4];
                   if (jk1 != jk2)
+#pragma omp atomic
                     xc[idx + jk2] += weight12;
                 }
               }
