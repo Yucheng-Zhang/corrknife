@@ -97,9 +97,9 @@ int main(int argc, char *argv[]) {
 
   /* write pair count to file */
   if (mpirank == 0) {
-    tt = MPI_Wtime() - tt;
-    printf(":: Time: %f s\n", tt);
+    printf(":: Time elapsed: %f s\n", MPI_Wtime() - tt);
     write_pc("out_xc.dat", nbins0, nbins1, njk, xc_g);
+    printf("== Output file: out_xc.dat\n");
   }
 
   /* reference */
@@ -111,8 +111,9 @@ int main(int argc, char *argv[]) {
     corr2d(xc_r, p1, 0, np1, p2, 0, np2, rlim, nbins0, nbins1, ncells, blen,
            posmin, 0, njk, 0, 0, 0);
     tt = MPI_Wtime() - tt;
-    printf(":: Time: %f s\n", tt);
+    printf(":: Time elapsed: %f s\n", tt);
     write_pc("out_xc_ref.dat", nbins0, nbins1, njk, xc_r);
+    printf("== Output file: out_xc_ref.dat\n");
   }
 
   /* free memory */
