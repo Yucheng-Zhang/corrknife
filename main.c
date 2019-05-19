@@ -45,14 +45,20 @@ int main(int argc, char *argv[]) {
   MPI_Comm_rank(MPI_COMM_WORLD, &mpirank);
   MPI_Comm_size(MPI_COMM_WORLD, &mpisize);
 
+  double tt; // for timing
+
   /* load data */
   double *p1 = (double *)malloc(np1 * ncol * sizeof(double));
   double *p2 = (double *)malloc(np2 * ncol * sizeof(double));
+  if (mpirank == 0)
+    printf(">> Loading data files...\n");
+  tt = MPI_Wtime();
   read_data(fdata, np1, p1, ncol);
   read_data(frand, np2, p2, ncol);
   if (mpirank == 0) {
-    printf(">> Data file: %s\n", fdata);
-    printf(">> Rand file: %s\n", frand);
+    printf("++ Data file: %s\n", fdata);
+    printf("++ Rand file: %s\n", frand);
+    printf(":: Time elapsed: %f s \n", MPI_Wtime() - tt);
   }
 
   /* prepare parameters */
@@ -63,7 +69,7 @@ int main(int argc, char *argv[]) {
     blen[i] = brange[i + 3] - brange[i];
     posmin[i] = brange[i];
     if (mpirank == 0)
-      printf(":: %lf, %lf\n", posmin[i], blen[i]);
+      printf(": %lf, %lf\n", posmin[i], blen[i]);
   }
 
   /* get start and end index of p1 */
@@ -76,13 +82,15 @@ int main(int argc, char *argv[]) {
   long size_xc = nbins0 * nbins1 * (njk + 1);
   double *xc = (double *)calloc(size_xc, sizeof(double));
   MPI_Barrier(MPI_COMM_WORLD);
-  double tt = MPI_Wtime();
+  if (mpirank == 0)
+    printf(">> Pair couting...\n");
+  tt = MPI_Wtime();
   pc2d(xc, p1, np1, p2, np2, blen, posmin, rlim, nbins0, nbins1, ncells, njk,
        spi, epi);
   MPI_Barrier(MPI_COMM_WORLD);
 
   /* gather results */
-  double *xc_g;
+  double *xc_g = NULL;
   if (mpirank == 0)
     xc_g = (double *)calloc(size_xc, sizeof(double));
   MPI_Reduce(xc, xc_g, size_xc, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
