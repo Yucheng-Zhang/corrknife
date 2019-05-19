@@ -26,5 +26,9 @@ rlim3=1
 
 np=4
 
+# set to 1 to compute reference result
+c_ref=0
+
 mpirun -np $np ./main $fdata $np1 $frand $np2 $ncol $nbins0 $nbins1 $njk $ncells \
-                      $xmin $xmax $ymin $ymax $zmin $zmax $rlim0 $rlim1 $rlim2 $rlim3
+                      $xmin $xmax $ymin $ymax $zmin $zmax $rlim0 $rlim1 $rlim2 $rlim3 \
+                      $c_ref

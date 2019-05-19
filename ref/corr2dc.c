@@ -176,8 +176,8 @@ void corr2d(double *xc_2d, double *p1, long fp1, long np1, double *p2, long fp2,
   init_mesh(ll, hoc, p2, fp2, np2, nattr, nhocells, blen, posmin);
 
   for (iq = fp1; iq < np1; iq++) {
-    if (iq % 100000 == 0 && interactive >= 0)
-      printf(".");
+    //    if (iq % 100000 == 0 && interactive >= 0)
+    //      printf(".");
 
     // read in first particle co-ordinate
     xyzp1[0] = p1[iq * nattr];

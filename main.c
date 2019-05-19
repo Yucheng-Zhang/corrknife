@@ -16,6 +16,8 @@ int main(int argc, char *argv[]) {
   double brange[6];   // range of x,y,z
   double rlim[4];
 
+  int c_ref = 0;
+
   sscanf(argv[1], "%s", fdata);
   sscanf(argv[2], "%ld", &np1);
   sscanf(argv[3], "%s", frand);
@@ -35,6 +37,7 @@ int main(int argc, char *argv[]) {
   sscanf(argv[17], "%lf", &rlim[1]);
   sscanf(argv[18], "%lf", &rlim[2]);
   sscanf(argv[19], "%lf", &rlim[3]);
+  sscanf(argv[20], "%d", &c_ref);
 
   /* init MPI */
   int mpirank, mpisize;
@@ -92,7 +95,7 @@ int main(int argc, char *argv[]) {
   }
 
   /* reference */
-  if (mpirank == 0) {
+  if (mpirank == 0 && c_ref) {
     printf(">> Computing reference results...\n");
     double *xc_r =
         (double *)calloc(nbins0 * nbins1 * (njk + 1), sizeof(double));
