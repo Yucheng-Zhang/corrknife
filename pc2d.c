@@ -50,8 +50,7 @@ int pc2d(double *xc, double *p1, long np1, double *p2, long np2, double *blen,
   init_mesh(ll, hoc, p2, np2, nattr, ncells, blen, posmin);
 
   // loop over particles in p1
-  double pp0[3],
-      bl[3]; // cache
+  double pp0[3], bl[3]; // cache
   for (int i = 0; i < 3; i++) {
     pp0[i] = posmin[i];
     bl[i] = blen[i];
